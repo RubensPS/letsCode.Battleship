@@ -2,6 +2,9 @@ package battleship;
 
 import com.sun.jdi.Value;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Board {
 
     int maxRow = 10;
@@ -17,6 +20,9 @@ public class Board {
 
     public Cell getCell(int row, int column) {
         return board[row][column];
+    }
+    public void setCell(List<Cell> shipList, int index) {
+        board[shipList.get(index).getrow()][shipList.get(index).getColumn()] = shipList.get(index);
     }
 
     public Cell[][] fillBoard() {
