@@ -6,21 +6,21 @@ public class Cell {
     private int column;
     private CellStatus cellStatus;
 
-    public Cell(int line, int column, CellStatus cellStatus) {
-        this.row = line;
+    public Cell(int row, int column, CellStatus cellStatus) {
+        this.row = row;
         this.column = column;
         this.cellStatus = cellStatus;
     }
 
-    public CellStatus getCellState() {
+    public CellStatus getCellStatus() {
         return cellStatus;
     }
 
-    public void setCellState(CellStatus cellState) {
-        this.cellStatus = cellState;
+    public void setCellStatus(CellStatus cellStatus) {
+        this.cellStatus = cellStatus;
     }
 
-    public int getLine() {
+    public int getrow() {
         return row;
     }
 
@@ -56,4 +56,12 @@ public class Cell {
         return symbol;
     }
 
+    @Override
+    public String toString() {
+        return "Cell{" +
+                "row=" + row +
+                ", column=" + column +
+                ", cellStatus=" + cellStatus +
+                '}';
+    }
 }
