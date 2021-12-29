@@ -146,7 +146,7 @@ public class CreateShipList {
 
             for (int i = 0; i < ShipList.size(); i++) {
                 while (ship.getrow() == ShipList.get(i).getrow() && ship.getColumn() == ShipList.get(i).getColumn()) {
-                    System.out.printf("PosiÁ„o j· ocupada. Entre com outra coordenada para o %s navio.%n", ShipOrder.values()[10 - shipNumber]);
+                    System.out.printf("Posição já ocupada. Entre com outra coordenada para o %s navio.%n", ShipOrder.values()[10 - shipNumber]);
 
                     System.out.printf("Selecione uma linha para o %s navio (de 0 e 9):", ShipOrder.values()[10 - shipNumber]);
                     setSelectRow(input.next().toUpperCase());
