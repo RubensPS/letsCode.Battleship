@@ -127,7 +127,7 @@ public class TrialShot {
 
             for (int i = 0; i < shotList.size(); i++) {
                 while (shotRow == shotList.get(i).getRow() && shotColumn == shotList.get(i).getColumn()) {
-                    System.out.printf("PosiÁ„o j· atacada, entre com uma nova coordenada para a tentativa %d.", shotCounter);
+                    System.out.printf("Posição já atacada, entre com uma nova coordenada para a tentativa %d.", shotCounter);
                     System.out.printf("Selecione uma linha para a tentativa %d (de A a J):", shotCounter);
                     setSelectRow(input.next().toUpperCase());
                     while (!Pattern.matches("[A-J]", selectRow)) {
@@ -163,7 +163,7 @@ public class TrialShot {
                 } else System.out.println("Verifique o status da cÈlula TIRO NAVIO");
             }
 
-            else System.out.println("Verifique o status da cÈlula da MAQUINA");
+            else System.out.println("Verifique o status da célula da MAQUINA");
 
             shot = new Cell(shotRow, shotColumn, playerBoard.getCell(shotRow, shotColumn).getCellStatus());
             addShot(shot);

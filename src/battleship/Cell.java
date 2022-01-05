@@ -20,7 +20,7 @@ public class Cell {
         this.cellStatus = cellStatus;
     }
 
-    public int getrow() {
+    public int getRow() {
         return row;
     }
 
