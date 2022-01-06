@@ -44,7 +44,6 @@ public class CreateShipList {
                 '}';
     }
 
-
     public int rowSymbolSwap() {
        int row = 0;
 
@@ -147,6 +146,7 @@ public class CreateShipList {
 
             for (int i = 0; i < shipList.size(); i++) {
                 while (ship.getRow() == shipList.get(i).getRow() && ship.getColumn() == shipList.get(i).getColumn()) {
+
                     System.out.printf("Posição já ocupada. Entre com outra coordenada para o %s navio.%n", ShipOrder.values()[10 - shipNumber]);
 
                     System.out.printf("Selecione uma linha para o %s navio (de 0 e 9):", ShipOrder.values()[10 - shipNumber]);
