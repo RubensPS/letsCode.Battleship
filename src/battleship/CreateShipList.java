@@ -7,7 +7,7 @@ import java.util.regex.*;
 
 public class CreateShipList {
 
-    private List<Cell> ShipList = new ArrayList();
+    private List<Cell> shipList = new ArrayList();
     private Cell ship;
     private Scanner input = new Scanner(System.in);
     private String selectRow;
@@ -17,7 +17,7 @@ public class CreateShipList {
     private int shipNumber = 10;
 
     public void addShip(Cell ship) {
-        ShipList.add(ship);
+        shipList.add(ship);
     }
 
     public void setShipStatus(Cell ship, CellStatus shipStatus) {
@@ -40,48 +40,48 @@ public class CreateShipList {
     @Override
     public String toString() {
         return "CreateShipList{" +
-                "ShipList=" + ShipList +
+                "ShipList=" + shipList +
                 '}';
     }
 
     public int rowSymbolSwap() {
-        int row = 0;
+       int row = 0;
 
-        switch (selectRow) {
-            case "A":
-                row = 0;
-                break;
-            case "B":
-                row = 1;
-                break;
-            case "C":
-                row = 2;
-                break;
-            case "D":
-                row = 3;
-                break;
-            case "E":
-                row = 4;
-                break;
-            case "F":
-                row = 5;
-                break;
-            case "G":
-                row = 6;
-                break;
-            case "H":
-                row = 7;
-                break;
-            case "I":
-                row = 8;
-                break;
-            case "J":
-                row = 9;
-                break;
-            default:
-                System.err.println("Row doesn't match!!!");
-        }
-        return row;
+       switch (selectRow) {
+           case "A":
+               row = 0;
+               break;
+           case "B":
+               row = 1;
+               break;
+           case "C":
+               row = 2;
+               break;
+           case "D":
+               row = 3;
+               break;
+           case "E":
+               row = 4;
+               break;
+           case "F":
+               row = 5;
+               break;
+           case "G":
+               row = 6;
+               break;
+           case "H":
+               row = 7;
+               break;
+           case "I":
+               row = 8;
+               break;
+           case "J":
+               row = 9;
+               break;
+           default:
+               System.err.println("Row doesn't match!!!");
+       }
+       return row;
     }
 
     public int columnSymbolSwap() {
@@ -142,10 +142,11 @@ public class CreateShipList {
             }
             setShipColumn(columnSymbolSwap());
 
-            ship = new Cell(shipRow, shipColumn, CellStatus.MY_SHIP);
+            ship = new Cell(shipRow, shipColumn, CellStatus.SHIP);
 
-            for (int i = 0; i < ShipList.size(); i++) {
-                while (ship.getrow() == ShipList.get(i).getrow() && ship.getColumn() == ShipList.get(i).getColumn()) {
+            for (int i = 0; i < shipList.size(); i++) {
+                while (ship.getRow() == shipList.get(i).getRow() && ship.getColumn() == shipList.get(i).getColumn()) {
+
                     System.out.printf("Posição já ocupada. Entre com outra coordenada para o %s navio.%n", ShipOrder.values()[10 - shipNumber]);
 
                     System.out.printf("Selecione uma linha para o %s navio (de 0 e 9):", ShipOrder.values()[10 - shipNumber]);
@@ -164,7 +165,7 @@ public class CreateShipList {
                     }
                     setShipColumn(columnSymbolSwap());
 
-                    ship = new Cell(shipRow, shipColumn, CellStatus.MY_SHIP);
+                    ship = new Cell(shipRow, shipColumn, CellStatus.SHIP);
                 }
             }
             addShip(ship);
@@ -172,7 +173,7 @@ public class CreateShipList {
         }
 
         input.close();
-        return ShipList;
+        return shipList;
     }
 
 }
