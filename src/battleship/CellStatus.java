@@ -2,7 +2,7 @@ package battleship;
 
 public enum CellStatus {
     WATER,
-    MY_SHIP,
+    SHIP,
     HIT,
     MISS,
     HIT_WITH_MY_SHIP,

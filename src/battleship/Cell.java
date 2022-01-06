@@ -20,7 +20,7 @@ public class Cell {
         this.cellStatus = cellStatus;
     }
 
-    public int getrow() {
+    public int getRow() {
         return row;
     }
 
@@ -36,12 +36,12 @@ public class Cell {
                 symbol = " * ";
                 break;
             case MISS:
-                symbol = " - ";
+                symbol = " ~ ";
                 break;
             case WATER:
                 symbol = "   ";
                 break;
-            case MY_SHIP:
+            case SHIP:
                 symbol = " N ";
                 break;
             case HIT_WITH_MY_SHIP:
