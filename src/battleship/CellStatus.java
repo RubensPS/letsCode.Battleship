@@ -5,6 +5,6 @@ public enum CellStatus {
     SHIP,
     HIT,
     MISS,
-    HIT_WITH_MY_SHIP,
-    MISS_WITH_MY_SHIP
+    HIT_WITH_SHIP,
+    MISS_WITH_SHIP
 }

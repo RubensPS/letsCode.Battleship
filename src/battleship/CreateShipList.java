@@ -171,8 +171,6 @@ public class CreateShipList {
             addShip(ship);
             shipNumber--;
         }
-
-        input.close();
         return shipList;
     }
 
