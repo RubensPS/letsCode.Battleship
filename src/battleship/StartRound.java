@@ -11,7 +11,7 @@ public class StartRound {
     private List<Cell> playerShotList = new ArrayList();
     private List<Cell> pcShotList = new ArrayList();
     private Cell shot;
-    private int shotCounter = 1;
+    private int shotCounter = 0;
     private String selectRow;
     private String selectColumn;
     private int shotRow;
@@ -114,7 +114,8 @@ public class StartRound {
 
     public void startGame(Board playerBoard, Board pcBoard) {
         System.out.println("O jogo começou. Entre com as coordenadas da sua tentativa!");
-        while (playerShipNumber > 0 || pcShipNumber > 0) {
+        while (playerShipNumber != 0 && pcShipNumber != 0) {
+            shotCounter++;
             System.out.printf("Selecione uma linha para a tentativa %d (de A a J):", shotCounter);
             setSelectRow(input.next().toUpperCase());
             while (!Pattern.matches("[A-J]", selectRow)) {
@@ -175,6 +176,7 @@ public class StartRound {
 
             shot = new Cell(shotRow, shotColumn, playerBoard.getCell(shotRow, shotColumn).getCellStatus());
             addPlayerShot(shot);
+            System.out.println(shot);
 
             setShotRow(random.nextInt(9));
             setShotColumn(random.nextInt(9));
@@ -212,6 +214,7 @@ public class StartRound {
 
             Print.printBoard(playerBoard);
             Print.printBoard(pcBoard);
+
             System.out.println(playerShipNumber);
             System.out.println(pcShipNumber);
 
