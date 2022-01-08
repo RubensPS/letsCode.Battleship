@@ -1,6 +1,5 @@
 package battleship;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class PositionShips {
@@ -8,7 +7,7 @@ public class PositionShips {
 
     public void positionShips(List shipList, Board board) {
         for (int ship = 0; ship < shipList.size(); ship++) {
-            board.setCell(shipList, ship);
+            board.setShipCell(shipList, ship);
         }
     }
 

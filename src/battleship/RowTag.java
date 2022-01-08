@@ -11,4 +11,7 @@ public enum RowTag {
     H,
     I,
     J,
+    ;
 }
+
+

@@ -2,9 +2,6 @@ package battleship;
 
 public class PrintBoard {
 
-    public PrintBoard() {
-    }
-
     public void printBoard(Board board) {
         System.out.println("-----------------------------------------------------------------");
         System.out.println("                            PLAYER");
