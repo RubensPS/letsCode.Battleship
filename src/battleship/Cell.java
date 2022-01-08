@@ -44,10 +44,10 @@ public class Cell {
             case SHIP:
                 symbol = " N ";
                 break;
-            case HIT_WITH_MY_SHIP:
+            case HIT_WITH_SHIP:
                 symbol = " X ";
                 break;
-            case MISS_WITH_MY_SHIP:
+            case MISS_WITH_SHIP:
                 symbol = " n ";
                 break;
             default:

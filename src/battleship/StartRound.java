@@ -2,12 +2,14 @@ package battleship;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.regex.*;
 
-public class TrialShot {
+public class StartRound {
 
-    private List<Cell> shotList = new ArrayList();
+    private List<Cell> playerShotList = new ArrayList();
+    private List<Cell> pcShotList = new ArrayList();
     private Cell shot;
     private int shotCounter = 1;
     private String selectRow;
@@ -17,8 +19,12 @@ public class TrialShot {
     private int playerShipNumber = 10;
     private int pcShipNumber = 10;
     private Scanner input = new Scanner(System.in);
+    private Random random = new Random();
+    private PrintBoard Print = new PrintBoard();
 
-    public void addShot(Cell shot) { shotList.add(shot); }
+    public void addPlayerShot(Cell shot) { playerShotList.add(shot); }
+
+    public void addPcShot(Cell shot) { pcShotList.add(shot); }
 
     public void setSelectRow(String selectRow) { this.selectRow = selectRow; }
 
@@ -106,9 +112,9 @@ public class TrialShot {
         return column;
     }
 
-    public List<Cell> startGame(List playerShipList, List pcShipList, Board playerBoard, Board pcBoard) {
-        System.out.println("O jogo comeÁou. Entre com as coordenadas da sua tentativa!");
-        while (playerShipNumber != 0 || pcShipNumber != 0) {
+    public void startGame(Board playerBoard, Board pcBoard) {
+        System.out.println("O jogo começou. Entre com as coordenadas da sua tentativa!");
+        while (playerShipNumber > 0 || pcShipNumber > 0) {
             System.out.printf("Selecione uma linha para a tentativa %d (de A a J):", shotCounter);
             setSelectRow(input.next().toUpperCase());
             while (!Pattern.matches("[A-J]", selectRow)) {
@@ -125,8 +131,8 @@ public class TrialShot {
             }
             setShotColumn(columnSymbolSwap());
 
-            for (int i = 0; i < shotList.size(); i++) {
-                while (shotRow == shotList.get(i).getRow() && shotColumn == shotList.get(i).getColumn()) {
+            for (int i = 0; i < playerShotList.size(); i++) {
+                while (shotRow == playerShotList.get(i).getRow() && shotColumn == playerShotList.get(i).getColumn()) {
                     System.out.printf("Posição já atacada, entre com uma nova coordenada para a tentativa %d.", shotCounter);
                     System.out.printf("Selecione uma linha para a tentativa %d (de A a J):", shotCounter);
                     setSelectRow(input.next().toUpperCase());
@@ -146,33 +152,75 @@ public class TrialShot {
                 }
             }
 
-            if (pcBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.WATER) {
-                pcBoard.getCell(shotRow, shotColumn).setCellStatus(CellStatus.MISS);
+            if (pcBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.WATER ||
+                    pcBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.MISS ||
+                    pcBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.HIT) {
                 if (playerBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.WATER) {
                     playerBoard.getCell(shotRow, shotColumn).setCellStatus(CellStatus.MISS);
-                } else if (playerBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.MY_SHIP) {
-                    playerBoard.getCell(shotRow, shotColumn).setCellStatus(CellStatus.MISS_WITH_MY_SHIP);
-                } else System.out.println("Verifique o status da cÈlula TIRO ¡GUA");
+                } else if (playerBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.SHIP) {
+                    playerBoard.getCell(shotRow, shotColumn).setCellStatus(CellStatus.MISS_WITH_SHIP);
+                } else System.out.println("Verifique o status da célula TIRO ÁGUA");
 
-            } else if (pcBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.MY_SHIP) {
-                pcBoard.getCell(shotRow, shotColumn).setCellStatus(CellStatus.HIT);
+            } else if (pcBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.SHIP ||
+                    pcBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.MISS_WITH_SHIP ||
+                    pcBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.HIT_WITH_SHIP) {
                 if (playerBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.WATER) {
                     playerBoard.getCell(shotRow, shotColumn).setCellStatus(CellStatus.HIT);
-                } else if (playerBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.MY_SHIP) {
-                    playerBoard.getCell(shotRow, shotColumn).setCellStatus(CellStatus.HIT_WITH_MY_SHIP);
-                } else System.out.println("Verifique o status da cÈlula TIRO NAVIO");
-            }
-
-            else System.out.println("Verifique o status da célula da MAQUINA");
+                    pcShipNumber--;
+                } else if (playerBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.SHIP) {
+                    playerBoard.getCell(shotRow, shotColumn).setCellStatus(CellStatus.HIT_WITH_SHIP);
+                    pcShipNumber--;
+                } else System.out.println("Verifique o status da célula TIRO NAVIO BLOCO JOGADOR");
+            } else System.out.println("Verifique o status da célula da MAQUINA");
 
             shot = new Cell(shotRow, shotColumn, playerBoard.getCell(shotRow, shotColumn).getCellStatus());
-            addShot(shot);
+            addPlayerShot(shot);
 
+            setShotRow(random.nextInt(9));
+            setShotColumn(random.nextInt(9));
 
-            //CONTINUA...J¡ DEMOS O NOSSO TIRO. AGORA TEMOS QUE GERAR O TIRO DO COMPUTADOR.
+            for (int i = 0; i < pcShotList.size(); i++) {
+                while (shotRow == pcShotList.get(i).getRow() && shotColumn == pcShotList.get(i).getColumn()) {
+                    setShotRow(random.nextInt(9));
+                    setShotColumn(random.nextInt(9));
+                }
+            }
 
+            if (playerBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.WATER ||
+                    playerBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.MISS ||
+                    playerBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.HIT) {
+                if (pcBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.WATER) {
+                    pcBoard.getCell(shotRow, shotColumn).setCellStatus(CellStatus.MISS);
+                } else if (pcBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.SHIP) {
+                    pcBoard.getCell(shotRow, shotColumn).setCellStatus(CellStatus.MISS_WITH_SHIP);
 
+                } else if (playerBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.SHIP ||
+                        playerBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.MISS_WITH_SHIP ||
+                        playerBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.HIT_WITH_SHIP) {
+                    if (pcBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.WATER) {
+                        pcBoard.getCell(shotRow, shotColumn).setCellStatus(CellStatus.HIT);
+                        playerShipNumber--;
+                    } else if (pcBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.SHIP) {
+                        pcBoard.getCell(shotRow, shotColumn).setCellStatus(CellStatus.HIT_WITH_SHIP);
+                        playerShipNumber--;
+                    } else System.out.println("Verifique o status da célula TIRO NAVIO BLOCO MAQUINA");
+                }
+            } else System.out.println("Verifique o status da célula do JOGADOR");
+
+            shot = new Cell(shotRow, shotColumn, pcBoard.getCell(shotRow, shotColumn).getCellStatus());
+            addPcShot(shot);
+
+            Print.printBoard(playerBoard);
+            Print.printBoard(pcBoard);
+            System.out.println(playerShipNumber);
+            System.out.println(pcShipNumber);
+
+            if (pcShipNumber == 0){
+                System.out.println("PARABÉNS, VOCÊ AFUNDOU TODOS OS NAVIOS DO INIMIGO!!!");
+            } else if (playerShipNumber == 0) {
+                System.out.println("O INIMIGO AFUNDOU TODOS OS SEUS NAVIOS, VOCÊ PERDEU A GUERRA!!!");
+            }
         }
+        input.close();
     }
-
 }
