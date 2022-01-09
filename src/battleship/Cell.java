@@ -1,5 +1,7 @@
 package battleship;
 
+import java.util.Objects;
+
 public class Cell {
 
     private int row;
@@ -10,6 +12,19 @@ public class Cell {
         this.row = row;
         this.column = column;
         this.cellStatus = cellStatus;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Cell cell = (Cell) o;
+        return row == cell.row && column == cell.column && cellStatus == cell.cellStatus;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(row, column, cellStatus);
     }
 
     public CellStatus getCellStatus() {

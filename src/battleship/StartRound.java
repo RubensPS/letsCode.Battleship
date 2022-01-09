@@ -1,15 +1,15 @@
 package battleship;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 import java.util.regex.*;
 
 public class StartRound {
 
     private List<Cell> playerShotList = new ArrayList();
     private List<Cell> pcShotList = new ArrayList();
+    private List<Cell> pcShotListForCheck = new ArrayList();
+    private boolean pcCoordinateCheck;
+    private Cell pcShotCheck;
     private Cell shot;
     private int shotCounter = 0;
     private String selectRow;
@@ -22,9 +22,12 @@ public class StartRound {
     private Random random = new Random();
     private PrintBoard Print = new PrintBoard();
 
+
     public void addPlayerShot(Cell shot) { playerShotList.add(shot); }
 
     public void addPcShot(Cell shot) { pcShotList.add(shot); }
+
+    public void addPcShotForCheck(Cell pcShotCheck) { pcShotListForCheck.add(pcShotCheck); }
 
     public void setSelectRow(String selectRow) { this.selectRow = selectRow; }
 
@@ -33,6 +36,19 @@ public class StartRound {
     public void setShotRow(int shotRow) { this.shotRow = shotRow; }
 
     public void setShotColumn(int shotColumn) { this.shotColumn = shotColumn; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        StartRound that = (StartRound) o;
+        return pcShotCheck.equals(that.pcShotCheck);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pcShotCheck);
+    }
 
     public int rowSymbolSwap() {
         int row = 0;
@@ -134,7 +150,7 @@ public class StartRound {
 
             for (int i = 0; i < playerShotList.size(); i++) {
                 while (shotRow == playerShotList.get(i).getRow() && shotColumn == playerShotList.get(i).getColumn()) {
-                    System.out.printf("Posição já atacada, entre com uma nova coordenada para a tentativa %d.", shotCounter);
+                    System.out.printf("Posição já atacada, entre com uma nova coordenada para a tentativa %d.%n", shotCounter);
                     System.out.printf("Selecione uma linha para a tentativa %d (de A a J):", shotCounter);
                     setSelectRow(input.next().toUpperCase());
                     while (!Pattern.matches("[A-J]", selectRow)) {
@@ -160,7 +176,11 @@ public class StartRound {
                     playerBoard.getCell(shotRow, shotColumn).setCellStatus(CellStatus.MISS);
                 } else if (playerBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.SHIP) {
                     playerBoard.getCell(shotRow, shotColumn).setCellStatus(CellStatus.MISS_WITH_SHIP);
-                } else System.out.println("Verifique o status da célula TIRO ÁGUA");
+                } else {
+                    System.out.println("Falha na verificação do tiro do jogador. Bloco 01 IF interno");
+                    System.out.printf("Tiro(%d, %d)", shotRow, shotColumn);
+                    System.out.println(playerShotList);
+                }
 
             } else if (pcBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.SHIP ||
                     pcBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.MISS_WITH_SHIP ||
@@ -171,22 +191,31 @@ public class StartRound {
                 } else if (playerBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.SHIP) {
                     playerBoard.getCell(shotRow, shotColumn).setCellStatus(CellStatus.HIT_WITH_SHIP);
                     pcShipNumber--;
-                } else System.out.println("Verifique o status da célula TIRO NAVIO BLOCO JOGADOR");
-            } else System.out.println("Verifique o status da célula da MAQUINA");
+                } else {
+                    System.out.println("Falha na verificação do tiro do jogador. Bloco 02 IF interno");
+                    System.out.printf("Tiro(%d, %d)", shotRow, shotColumn);
+                    System.out.println(playerShotList);
+                }
+            } else {
+                System.out.println("Falha na verificação do tiro do jogador. Bloco IF externo");
+                System.out.printf("Tiro(%d, %d)", shotRow, shotColumn);
+                System.out.println(playerShotList);
+            }
 
             shot = new Cell(shotRow, shotColumn, playerBoard.getCell(shotRow, shotColumn).getCellStatus());
             addPlayerShot(shot);
             System.out.println(shot);
+            System.out.println(playerShotList);
 
-            setShotRow(random.nextInt(9));
-            setShotColumn(random.nextInt(9));
+            do {
+                setShotRow(random.nextInt(9));
+                setShotColumn(random.nextInt(9));
+                pcShotCheck = new Cell(shotRow, shotColumn, CellStatus.WATER);
+                System.out.println("tiro repetido do PC:" + " " + pcShotCheck);
+            } while (pcCoordinateCheck = pcShotListForCheck.contains(pcShotCheck));
 
-            for (int i = 0; i < pcShotList.size(); i++) {
-                while (shotRow == pcShotList.get(i).getRow() && shotColumn == pcShotList.get(i).getColumn()) {
-                    setShotRow(random.nextInt(9));
-                    setShotColumn(random.nextInt(9));
-                }
-            }
+            addPcShotForCheck(pcShotCheck);
+            System.out.println(pcShotListForCheck);
 
             if (playerBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.WATER ||
                     playerBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.MISS ||
@@ -195,22 +224,35 @@ public class StartRound {
                     pcBoard.getCell(shotRow, shotColumn).setCellStatus(CellStatus.MISS);
                 } else if (pcBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.SHIP) {
                     pcBoard.getCell(shotRow, shotColumn).setCellStatus(CellStatus.MISS_WITH_SHIP);
-
-                } else if (playerBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.SHIP ||
-                        playerBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.MISS_WITH_SHIP ||
-                        playerBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.HIT_WITH_SHIP) {
-                    if (pcBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.WATER) {
-                        pcBoard.getCell(shotRow, shotColumn).setCellStatus(CellStatus.HIT);
-                        playerShipNumber--;
-                    } else if (pcBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.SHIP) {
-                        pcBoard.getCell(shotRow, shotColumn).setCellStatus(CellStatus.HIT_WITH_SHIP);
-                        playerShipNumber--;
-                    } else System.out.println("Verifique o status da célula TIRO NAVIO BLOCO MAQUINA");
+                } else {
+                    System.out.println("Falha na verificação do tiro do computador. Bloco 01 IF interno");
+                    System.out.printf("Tiro(%d, %d)", shotRow, shotColumn);
+                    System.out.println(pcShotList);
                 }
-            } else System.out.println("Verifique o status da célula do JOGADOR");
+            } else if (playerBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.SHIP ||
+                    playerBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.MISS_WITH_SHIP ||
+                    playerBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.HIT_WITH_SHIP) {
+                if (pcBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.WATER) {
+                    pcBoard.getCell(shotRow, shotColumn).setCellStatus(CellStatus.HIT);
+                    playerShipNumber--;
+                } else if (pcBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.SHIP) {
+                    pcBoard.getCell(shotRow, shotColumn).setCellStatus(CellStatus.HIT_WITH_SHIP);
+                    playerShipNumber--;
+                } else {
+                    System.out.println("Falha na verificação do tiro do computador. Bloco 02 IF interno");
+                    System.out.printf("Tiro(%d, %d)", shotRow, shotColumn);
+                    System.out.println(pcShotList);
+                }
+            } else {
+                System.out.println("Falha na verificação do tiro do computador. Bloco IF externo");
+                System.out.printf("Tiro(%d, %d)", shotRow, shotColumn);
+                System.out.println(pcShotList);
+            }
 
             shot = new Cell(shotRow, shotColumn, pcBoard.getCell(shotRow, shotColumn).getCellStatus());
             addPcShot(shot);
+            System.out.println(shot);
+            System.out.println(pcShotList);
 
             Print.printBoard(playerBoard);
             Print.printBoard(pcBoard);
