@@ -257,8 +257,8 @@ public class StartRound {
             Print.printBoard(playerBoard);
             Print.printBoard(pcBoard);
 
-            System.out.println("Você ainda possui " + playerShipNumber + " navios.");
-            System.out.println("Seu oponente ainda possui " + pcShipNumber + " navios.");
+            System.out.println("Você possui " + playerShipNumber + " navios.");
+            System.out.println("Seu oponente possui " + pcShipNumber + " navios.");
 
             if (pcShipNumber == 0){
                 System.out.println("PARABÉNS, VOCÊ AFUNDOU TODOS OS NAVIOS DO INIMIGO!!!");
