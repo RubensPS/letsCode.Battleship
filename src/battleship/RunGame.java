@@ -6,23 +6,10 @@ public class RunGame {
 
     public static void main(String[] args) {
 
-        System.out.println(
-                "\n" +
-                "=============== BATALHA NAVAL ===============\n" +
-                "\n" +
-                "              |    |    |\n" +
-                "             )_)  )_)  )_)\n" +
-                "            )___))___))___)\\\n" +
 
-                "           )____)____)_____)\\\\\n" +
-                "         _____|____|____|____\\\\\\__\n" +
-                "---------\\                   /---------\n" +
-                "  ^^^^^ ^^^^^^^^^^^^^^^^^^^^^\n" +
-                "    ^^^^      ^^^^     ^^^    ^^\n" +
-                "         ^^^^      ^^^\n" +
-                "\n" +
-                "------------------------------------------------\n");
 
+        //Chamando a página inicial
+        StartScreen label = new StartScreen();
 
         //Criando objeto para imprimir tabuleiros
         PrintBoard Print = new PrintBoard();
