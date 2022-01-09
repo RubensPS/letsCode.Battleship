@@ -6,8 +6,6 @@ public class RunGame {
 
     public static void main(String[] args) {
 
-
-
         //Chamando a página inicial
         StartScreen label = new StartScreen();
 
@@ -17,7 +15,6 @@ public class RunGame {
         //Criando a lista de navios do jogador
         CreateShipList createPlayerList = new CreateShipList();
         List playerShipList = createPlayerList.generateList();
-        System.out.println(playerShipList);
 
         //Criando a lista de navios do computador
         CreatePcShipList createPcList = new CreatePcShipList();

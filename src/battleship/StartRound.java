@@ -6,10 +6,10 @@ import java.util.regex.*;
 public class StartRound {
 
     private List<Cell> playerShotList = new ArrayList();
+    private List<Cell> playerCheckShotList = new ArrayList();
     private List<Cell> pcShotList = new ArrayList();
-    private List<Cell> pcShotListForCheck = new ArrayList();
-    private boolean pcCoordinateCheck;
-    private Cell pcShotCheck;
+    private List<Cell> pcShotCoordinateList = new ArrayList();
+    private int pcShotIndex;
     private Cell shot;
     private int shotCounter = 0;
     private String selectRow;
@@ -27,7 +27,9 @@ public class StartRound {
 
     public void addPcShot(Cell shot) { pcShotList.add(shot); }
 
-    public void addPcShotForCheck(Cell pcShotCheck) { pcShotListForCheck.add(pcShotCheck); }
+    public void remPcShotCoordinate(int index) { pcShotCoordinateList.remove(index); }
+
+    public void addPcShotCoordinate(Cell shot) { pcShotCoordinateList.add(shot); }
 
     public void setSelectRow(String selectRow) { this.selectRow = selectRow; }
 
@@ -37,17 +39,14 @@ public class StartRound {
 
     public void setShotColumn(int shotColumn) { this.shotColumn = shotColumn; }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        StartRound that = (StartRound) o;
-        return pcShotCheck.equals(that.pcShotCheck);
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(pcShotCheck);
+    private void createPcShotDatabase() {
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                shot = new Cell(i, j, CellStatus.WATER);
+                addPcShotCoordinate(shot);
+                }
+        }
     }
 
     public int rowSymbolSwap() {
@@ -130,8 +129,11 @@ public class StartRound {
 
     public void startGame(Board playerBoard, Board pcBoard) {
         System.out.println("O jogo começou. Entre com as coordenadas da sua tentativa!");
+        createPcShotDatabase();
         while (playerShipNumber != 0 && pcShipNumber != 0) {
             shotCounter++;
+
+            //TENTATIVA do JOGADOR
             System.out.printf("Selecione uma linha para a tentativa %d (de A a J):", shotCounter);
             setSelectRow(input.next().toUpperCase());
             while (!Pattern.matches("[A-J]", selectRow)) {
@@ -147,26 +149,26 @@ public class StartRound {
                 setSelectColumn(input.next());
             }
             setShotColumn(columnSymbolSwap());
+            shot = new Cell(shotRow, shotColumn, CellStatus.WATER);
 
-            for (int i = 0; i < playerShotList.size(); i++) {
-                while (shotRow == playerShotList.get(i).getRow() && shotColumn == playerShotList.get(i).getColumn()) {
-                    System.out.printf("Posição já atacada, entre com uma nova coordenada para a tentativa %d.%n", shotCounter);
-                    System.out.printf("Selecione uma linha para a tentativa %d (de A a J):", shotCounter);
+            while (playerCheckShotList.contains(shot)) {
+                System.out.printf("Posição já atacada, entre com uma nova coordenada para a tentativa %d.%n", shotCounter);
+                System.out.printf("Selecione uma linha para a tentativa %d (de A a J):", shotCounter);
+                setSelectRow(input.next().toUpperCase());
+                while (!Pattern.matches("[A-J]", selectRow)) {
+                    System.out.println("A linha selecionada deve estar entre A e J. Digite novamente.");
                     setSelectRow(input.next().toUpperCase());
-                    while (!Pattern.matches("[A-J]", selectRow)) {
-                        System.out.println("A linha selecionada deve estar entre A e J. Digite novamente.");
-                        setSelectRow(input.next().toUpperCase());
-                    }
-                    setShotRow(rowSymbolSwap());
-
-                    System.out.printf("Selecione uma coluna para o tentativa %d (de 0 a 9):", shotCounter);
-                    setSelectColumn(input.next());
-                    while (!Pattern.matches("[\\d]", selectColumn)) {
-                        System.out.println("A coluna selecionada deve estar entre 0 e 9. Digite novamente.");
-                        setSelectColumn(input.next());
-                    }
-                    setShotColumn(columnSymbolSwap());
                 }
+                setShotRow(rowSymbolSwap());
+
+                System.out.printf("Selecione uma coluna para o tentativa %d (de 0 a 9):", shotCounter);
+                setSelectColumn(input.next());
+                while (!Pattern.matches("[\\d]", selectColumn)) {
+                    System.out.println("A coluna selecionada deve estar entre 0 e 9. Digite novamente.");
+                    setSelectColumn(input.next());
+                }
+                setShotColumn(columnSymbolSwap());
+                shot = new Cell(shotRow, shotColumn, CellStatus.WATER);
             }
 
             if (pcBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.WATER ||
@@ -207,15 +209,13 @@ public class StartRound {
             System.out.println(shot);
             System.out.println(playerShotList);
 
-            do {
-                setShotRow(random.nextInt(9));
-                setShotColumn(random.nextInt(9));
-                pcShotCheck = new Cell(shotRow, shotColumn, CellStatus.WATER);
-                System.out.println("tiro repetido do PC:" + " " + pcShotCheck);
-            } while (pcCoordinateCheck = pcShotListForCheck.contains(pcShotCheck));
-
-            addPcShotForCheck(pcShotCheck);
-            System.out.println(pcShotListForCheck);
+            //TENTATIVA do COMPUTADOR
+            pcShotIndex = random.nextInt(pcShotCoordinateList.size() - 1);
+            System.out.println(pcShotCoordinateList.size() - 1);
+            setShotRow(pcShotCoordinateList.get(pcShotIndex).getRow());
+            setShotColumn(pcShotCoordinateList.get(pcShotIndex).getColumn());
+            remPcShotCoordinate(pcShotIndex);
+            System.out.println(pcShotCoordinateList.size());
 
             if (playerBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.WATER ||
                     playerBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.MISS ||
