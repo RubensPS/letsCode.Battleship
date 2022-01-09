@@ -23,21 +23,23 @@ public class StartRound {
     private PrintBoard Print = new PrintBoard();
 
 
-    public void addPlayerShot(Cell shot) { playerShotList.add(shot); }
+    private void addPlayerShot(Cell shot) { playerShotList.add(shot); }
 
-    public void addPcShot(Cell shot) { pcShotList.add(shot); }
+    private void addPlayerCheckShotList(Cell shot) { playerCheckShotList.add(shot); }
 
-    public void remPcShotCoordinate(int index) { pcShotCoordinateList.remove(index); }
+    private void addPcShot(Cell shot) { pcShotList.add(shot); }
 
-    public void addPcShotCoordinate(Cell shot) { pcShotCoordinateList.add(shot); }
+    private void remPcShotCoordinate(int index) { pcShotCoordinateList.remove(index); }
 
-    public void setSelectRow(String selectRow) { this.selectRow = selectRow; }
+    private void addPcShotCoordinate(Cell shot) { pcShotCoordinateList.add(shot); }
 
-    public void setSelectColumn(String selectColumn) { this.selectColumn = selectColumn; }
+    private void setSelectRow(String selectRow) { this.selectRow = selectRow; }
 
-    public void setShotRow(int shotRow) { this.shotRow = shotRow; }
+    private void setSelectColumn(String selectColumn) { this.selectColumn = selectColumn; }
 
-    public void setShotColumn(int shotColumn) { this.shotColumn = shotColumn; }
+    private void setShotRow(int shotRow) { this.shotRow = shotRow; }
+
+    private void setShotColumn(int shotColumn) { this.shotColumn = shotColumn; }
 
 
     private void createPcShotDatabase() {
@@ -170,6 +172,7 @@ public class StartRound {
                 setShotColumn(columnSymbolSwap());
                 shot = new Cell(shotRow, shotColumn, CellStatus.WATER);
             }
+            addPlayerCheckShotList(shot);
 
             if (pcBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.WATER ||
                     pcBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.MISS ||
