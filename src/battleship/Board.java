@@ -15,9 +15,6 @@ public class Board {
 
     public Board(String name) {
         this.name = name;
-        this.maxRow = maxRow;
-        this.maxColumn = maxColumn;
-        this.board = board;
         fillBoard();
     }
 
