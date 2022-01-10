@@ -22,8 +22,8 @@ public class RunGame {
         System.out.println(pcShipList);
 
         //Criando tabuleiros
-        Board playerBoard = new Board();
-        Board pcBoard = new Board();
+        Board playerBoard = new Board("playerBoard");
+        Board pcBoard = new Board("pcBoard");
 
         //Posicionando navios
         PositionShips position = new PositionShips();
