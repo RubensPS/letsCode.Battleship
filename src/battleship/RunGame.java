@@ -19,7 +19,6 @@ public class RunGame {
         //Criando a lista de navios do computador
         CreatePcShipList createPcList = new CreatePcShipList();
         List pcShipList = createPcList.generatePcShipList();
-        System.out.println(pcShipList);
 
         //Criando tabuleiros
         Board playerBoard = new Board("playerBoard");

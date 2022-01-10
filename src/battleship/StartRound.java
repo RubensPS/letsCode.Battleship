@@ -51,7 +51,7 @@ public class StartRound {
         }
     }
 
-    public int rowSymbolSwap() {
+    private int rowSymbolSwap() {
         int row = 0;
         switch (selectRow) {
             case "A":
@@ -90,7 +90,7 @@ public class StartRound {
         return row;
     }
 
-    public int columnSymbolSwap() {
+    private int columnSymbolSwap() {
         int column = 0;
         switch (selectColumn) {
             case "0":
@@ -209,16 +209,12 @@ public class StartRound {
 
             shot = new Cell(shotRow, shotColumn, playerBoard.getCell(shotRow, shotColumn).getCellStatus());
             addPlayerShot(shot);
-            System.out.println(shot);
-            System.out.println(playerShotList);
 
             //TENTATIVA do COMPUTADOR
             pcShotIndex = random.nextInt(pcShotCoordinateList.size() - 1);
-            System.out.println(pcShotCoordinateList.size() - 1);
             setShotRow(pcShotCoordinateList.get(pcShotIndex).getRow());
             setShotColumn(pcShotCoordinateList.get(pcShotIndex).getColumn());
             remPcShotCoordinate(pcShotIndex);
-            System.out.println(pcShotCoordinateList.size());
 
             if (playerBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.WATER ||
                     playerBoard.getCell(shotRow, shotColumn).getCellStatus() == CellStatus.MISS ||
@@ -254,11 +250,8 @@ public class StartRound {
 
             shot = new Cell(shotRow, shotColumn, pcBoard.getCell(shotRow, shotColumn).getCellStatus());
             addPcShot(shot);
-            System.out.println(shot);
-            System.out.println(pcShotList);
 
             Print.printBoard(playerBoard);
-            Print.printBoard(pcBoard);
 
             System.out.println("Você possui " + playerShipNumber + " navio(s).");
             System.out.println("Seu oponente possui " + pcShipNumber + " navio(s).");

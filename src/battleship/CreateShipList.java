@@ -2,6 +2,7 @@ package battleship;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.regex.*;
 
@@ -10,30 +11,25 @@ public class CreateShipList {
     private List<Cell> shipList = new ArrayList();
     private Cell ship;
     private Scanner input = new Scanner(System.in);
+    private String positioningMethod;
+    private Random random = new Random();
     private String selectRow;
     private String selectColumn;
     private int shipRow;
     private int shipColumn;
     private int shipNumber = 10;
 
-    public void addShip(Cell ship) {
+    private void addShip(Cell ship) {
         shipList.add(ship);
     }
 
-    public void setShipStatus(Cell ship, CellStatus shipStatus) {
-        ship.setCellStatus(shipStatus);
-    }
-    public CellStatus getShipStatus(Cell ship) {
-        return ship.getCellStatus();
-    }
+    private void setSelectRow(String selectRow) { this.selectRow = selectRow; }
 
-    public void setSelectRow(String selectRow) { this.selectRow = selectRow; }
+    private void setSelectColumn(String selectColumn) { this.selectColumn = selectColumn; }
 
-    public void setSelectColumn(String selectColumn) { this.selectColumn = selectColumn; }
+    private void setShipRow(int shipRow) { this.shipRow = shipRow; }
 
-    public void setShipRow(int shipRow) { this.shipRow = shipRow; }
-
-    public void setShipColumn(int shipColumn) {
+    private void setShipColumn(int shipColumn) {
         this.shipColumn = shipColumn;
     }
 
@@ -44,7 +40,7 @@ public class CreateShipList {
                 '}';
     }
 
-    public int rowSymbolSwap() {
+    private int rowSymbolSwap() {
        int row = 0;
 
        switch (selectRow) {
@@ -84,7 +80,7 @@ public class CreateShipList {
        return row;
     }
 
-    public int columnSymbolSwap() {
+    private int columnSymbolSwap() {
         int column = 0;
 
         switch (selectColumn) {
@@ -125,30 +121,33 @@ public class CreateShipList {
     }
 
     public List<Cell> generateList() {
-        while (shipNumber != 0) {
-            System.out.printf("Selecione uma linha para o %s navio (de A a J):", ShipOrder.values()[10 - shipNumber]);
-            setSelectRow(input.next().toUpperCase());
-            while (!Pattern.matches("[A-J]", selectRow)) {
-                System.out.println("A linha selecionada deve estar entre A e J. Digite novamente.");
-                setSelectRow(input.next().toUpperCase());
+        System.out.printf("SELECIONE O MODO DE POSICIONAMENTO DOS NAVIOS!!!%n" +
+                            "1 - AUTOMÁTICO" + "        " + "2 - MANUAL%n" +
+                            "Modo: ");
+        positioningMethod = input.next();
+        while (!Pattern.matches("[12]", positioningMethod)) {
+            System.out.printf("SELECIONE UM DOS MODOS DISPONÍVEIS!!!%n" +
+                    "1 - AUTOMÁTICO" + "        " + "2 - MANUAL%n" +
+                    "Modo: ");
+            positioningMethod = input.next();
+        }
+
+        if (positioningMethod.equals("1") ) {
+            while (shipNumber != 0) {
+                setShipRow(random.nextInt(9));
+                setShipColumn(random.nextInt(9));
+                ship = new Cell(shipRow, shipColumn, CellStatus.SHIP);
+                while (shipList.contains(ship)) {
+                    setShipRow(random.nextInt(9));
+                    setShipColumn(random.nextInt(9));
+                    ship = new Cell(shipRow, shipColumn, CellStatus.SHIP);
+                }
+                addShip(ship);
+                shipNumber--;
             }
-            setShipRow(rowSymbolSwap());
-
-            System.out.printf("Selecione uma coluna para o %s navio (de 0 a 9):", ShipOrder.values()[10 - shipNumber]);
-            setSelectColumn(input.next());
-            while (!Pattern.matches("[\\d]", selectColumn)) {
-                System.out.println("A coluna selecionada deve estar entre 0 e 9. Digite novamente.");
-                setSelectColumn(input.next());
-            }
-            setShipColumn(columnSymbolSwap());
-
-            ship = new Cell(shipRow, shipColumn, CellStatus.SHIP);
-
-            while (shipList.contains(ship)) {
-
-                System.out.printf("Posição já ocupada. Entre com outra coordenada para o %s navio.%n", ShipOrder.values()[10 - shipNumber]);
-
-                System.out.printf("Selecione uma linha para o %s navio (de 0 e 9):", ShipOrder.values()[10 - shipNumber]);
+        } else if (positioningMethod.equals("2")) {
+            while (shipNumber != 0) {
+                System.out.printf("Selecione uma linha para o %s navio (de A a J):", ShipOrder.values()[10 - shipNumber]);
                 setSelectRow(input.next().toUpperCase());
                 while (!Pattern.matches("[A-J]", selectRow)) {
                     System.out.println("A linha selecionada deve estar entre A e J. Digite novamente.");
@@ -165,11 +164,33 @@ public class CreateShipList {
                 setShipColumn(columnSymbolSwap());
 
                 ship = new Cell(shipRow, shipColumn, CellStatus.SHIP);
-            }
 
-            addShip(ship);
-            shipNumber--;
-        }
+                while (shipList.contains(ship)) {
+                    System.out.printf("Posição já ocupada. Entre com outra coordenada para o %s navio.%n", ShipOrder.values()[10 - shipNumber]);
+
+                    System.out.printf("Selecione uma linha para o %s navio (de 0 e 9):", ShipOrder.values()[10 - shipNumber]);
+                    setSelectRow(input.next().toUpperCase());
+                    while (!Pattern.matches("[A-J]", selectRow)) {
+                        System.out.println("A linha selecionada deve estar entre A e J. Digite novamente.");
+                        setSelectRow(input.next().toUpperCase());
+                    }
+                    setShipRow(rowSymbolSwap());
+
+                    System.out.printf("Selecione uma coluna para o %s navio (de 0 a 9):", ShipOrder.values()[10 - shipNumber]);
+                    setSelectColumn(input.next());
+                    while (!Pattern.matches("[\\d]", selectColumn)) {
+                        System.out.println("A coluna selecionada deve estar entre 0 e 9. Digite novamente.");
+                        setSelectColumn(input.next());
+                    }
+                    setShipColumn(columnSymbolSwap());
+
+                    ship = new Cell(shipRow, shipColumn, CellStatus.SHIP);
+                }
+                addShip(ship);
+                shipNumber--;
+            }
+        } else System.err.println("!!!ERRO NA ESCOLHA DO MODO DE GERAÇÃO DA LISTA!!!");
+
         System.out.println("----------------------------------------------------------------");
         return shipList;
     }
