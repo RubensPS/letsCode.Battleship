@@ -4,11 +4,17 @@ import java.util.List;
 
 public class Board {
 
+    private final String name;
     int maxRow = 10;
     int maxColumn = 10;
     Cell[][] board;
 
-    public Board() {
+    public String getName() {
+        return name;
+    }
+
+    public Board(String name) {
+        this.name = name;
         this.maxRow = maxRow;
         this.maxColumn = maxColumn;
         this.board = board;
