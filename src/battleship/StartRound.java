@@ -258,8 +258,12 @@ public class StartRound {
 
             if (pcShipNumber == 0){
                 System.out.println("PARABÉNS, VOCÊ AFUNDOU TODOS OS NAVIOS DO INIMIGO!!!");
+                Print.printBoard(playerBoard);
+                Print.printBoard(pcBoard);
             } else if (playerShipNumber == 0) {
                 System.out.println("O INIMIGO AFUNDOU TODOS OS SEUS NAVIOS, VOCÊ PERDEU A GUERRA!!!");
+                Print.printBoard(playerBoard);
+                Print.printBoard(pcBoard);
             }
         }
         input.close();
